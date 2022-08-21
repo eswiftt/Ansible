@@ -1,0 +1,9 @@
+---
+- hosts: all
+  become: no
+  tasks:
+    - name: Add server details on ssh
+      copy:
+        content: |
+          Welcome to {{ ansible_facts['hostname'] }}
+        dest: /etc/motd
