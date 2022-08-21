@@ -1,6 +1,6 @@
 ---
 - hosts: all
-  become: yes
+  become: true
   tasks:
     - name: Install web packages
       yum:
@@ -10,13 +10,13 @@
       service:
         name: httpd
         service: started
-        enabled: yes
+        enabled: true
     - name: add firewall rule
       firewalld:
         service: httpd
         state: enabled
-        immediate: yes
-        permanent: yes
+        immediate: true
+        permanent: true
     - name: Copy web content
       copy:
         content: Welcome on "{{ ansible_facts['hostname'] }}"
