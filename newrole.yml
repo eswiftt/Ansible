@@ -1,5 +1,0 @@
----
-- hosts: webservers:serverd.example.com
-  become: yes
-  roles:
-    - apache
