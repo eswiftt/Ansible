@@ -1,0 +1,41 @@
+---
+- hosts: dev:test:prod
+  become: yes
+  vars_files:
+    - userlist.yml
+    - locker.yml
+  tasks:
+    - name: Verify groups exist
+      group:
+        name: "{{ item }}"
+        state: present
+      loop:
+        - devops
+        - opsmgr
+
+    - name: Create user developers
+      user:
+        name: "{{ item.name }}"
+        state: present
+        groups: devops
+        append: yes
+        password: "{{ PW_developer | password_hash('sha512') }}"
+      loop: "{{ users }}"
+      when: 
+        - item.job == 'developer'
+        - (inventory_hostname in groups['dev'] or inventory_hostname in groups['test'])
+
+
+    - name: Create user manager
+      user:
+        name: "{{ item.name }}"
+        state: present
+        groups: opsmgr
+        append: yes
+        password: "{{ PW_manager | password_hash('sha512') }}"
+      loop: "{{ users }}"
+      when:
+        - item.job == 'manager'
+        - inventory_hostname in groups['prod']
+
+

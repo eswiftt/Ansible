@@ -1,0 +1,52 @@
+---
+- hosts: all
+  become: yes
+  ignore_errors: yes
+  tasks:
+    - name: Create partition out of disk
+      parted:
+        device: /dev/vdb
+        number: 1
+        part_end: 100%
+        flags: [lvm]
+        state: present
+
+    - name: Create vg
+      lvg:
+        pvs: /dev/vdb1
+        vg: research
+        state: present
+
+    - name: Verify VG
+      command: "vgs research"
+      register: vg_result
+
+    - name: Display VG doesn't exist
+      debug:
+        msg: "volume group does not exist"
+      when: vg_result.failed == true
+
+    - name: Create vg of 1500MiB
+      lvol:
+        vg: research
+        lv: data
+        size: 1500M
+      when: vg_result.failed == false
+      register: lv_result
+
+    - name: Display insufficient space
+      debug:
+        msg: "Cannot create logical volume of that size"
+      when: lv_result.failed == true
+
+    - name: Create LV of 800MiB
+      lvol:
+        vg: research
+        lv: data
+        size: 800M
+    
+    - name: Create fsystem
+      filesystem:
+        dev: /dev/mapper/research-data
+        fstype: ext4
+

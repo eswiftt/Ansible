@@ -1,0 +1,10 @@
+---
+
+users:
+  - name: alex
+    job: manager
+  - name: ben
+    job: developer
+  - name: bob
+    job: developer
+

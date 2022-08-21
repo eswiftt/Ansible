@@ -1,0 +1,34 @@
+---
+- hosts: balancer
+  become: yes
+  roles:
+    - balancer/geerlingguy.haproxy
+  vars:
+    haproxy_backend_servers:
+      - name: app1
+        address: 192.168.122.86:80
+      - name: app2
+        address: 192.168.122.117:80
+
+  pre_tasks:
+    - name: Open firewall for http
+      firewalld:
+        service: http
+        state: enabled
+        immediate: yes
+        permanent: yes
+
+- hosts: webservers
+  become: yes
+  roles: 
+    - phpinfo/geerlingguy.php
+  pre_tasks:
+    - name: Copy content
+      copy:
+        content: |
+          Hello PHP world Welcome to {{ ansible_default_ipv4.address }}
+          <?php phpinfo(); ?>
+        dest: /var/www/html/hello.php
+
+ 
+     

@@ -1,0 +1,27 @@
+---
+- hosts:
+    - dev
+    - test
+    - prod
+  become: yes
+  tasks:
+    - name: install php and mariadb
+      yum:
+        name:
+          - mariadb
+          - php
+        state: installed
+
+    - name: Install RPM development tools on dev
+      yum:
+        name: '@RPM Development Tools'
+        state: installed
+      when: inventory_hostname in groups['dev']
+
+    - name: Update all packages
+      yum:
+        name: "*"
+        state: latest
+      when: inventory_hostname in groups['dev']
+      check_mode: yes
+
