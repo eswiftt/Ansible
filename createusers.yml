@@ -1,9 +1,0 @@
----
-- hosts: all
-  become: yes
-  tasks:
-    - name: Create a user
-      user:
-        name: mdtahmeed
-        password: "{{ 'redhat' | password_hash(sha512) }}"
-        state: present
