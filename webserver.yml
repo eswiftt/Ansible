@@ -10,13 +10,13 @@
       service:
         name: httpd
         service: started
-        enabled: yes    
+        enabled: yes
     - name: add firewall rule
       firewalld:
         service: httpd
         state: enabled
         immediate: yes
-        permanent: yes    
+        permanent: yes
     - name: Copy web content
       copy:
         content: Welcome on "{{ ansible_facts['hostname'] }}"
