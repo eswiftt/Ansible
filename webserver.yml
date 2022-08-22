@@ -6,22 +6,26 @@
       yum:
         name: httpd
         state: installed
+
     - name: start and enable httpd service
       service:
         name: httpd
         service: started
-        enabled: true
+        enabled: yes
+
     - name: add firewall rule
       firewalld:
         service: httpd
         state: enabled
         immediate: true
         permanent: true
+
     - name: Copy web content
       copy:
         content: Welcome on "{{ ansible_facts['hostname'] }}"
         dest: /var/www/html/index.html
       notify: restart httpd
+
   handlers:
     - name: restart httpd
       service:
