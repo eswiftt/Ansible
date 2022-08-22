@@ -7,3 +7,4 @@
         content: |
           Welcome to {{ ansible_facts['hostname'] }}
         dest: /etc/motd
+...
