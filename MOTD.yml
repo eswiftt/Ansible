@@ -1,6 +1,6 @@
 ---
 - hosts: all
-  become: no
+  become: flase
   tasks:
     - name: Add server details on ssh
       copy:
