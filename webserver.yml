@@ -10,7 +10,7 @@
       service:
         name: httpd
         service: started
-        enabled: yes
+        enabled: true
     - name: add firewall rule
       firewalld:
         service: httpd
